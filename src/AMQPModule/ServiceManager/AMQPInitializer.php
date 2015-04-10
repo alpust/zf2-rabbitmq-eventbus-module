@@ -1,5 +1,5 @@
 <?php
-namespace AMQPModule;
+namespace AMQPModule\ServiceManager;
 
 use AMQPModule\ServiceManager\Interfaces\AMQPAwareInterface;
 use AMQPModule\ServiceManager\Interfaces\ConsumerAwareInterface;

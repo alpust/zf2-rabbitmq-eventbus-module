@@ -53,7 +53,7 @@ return [
             'AMQPModule\Factory\PublisherAbstractFactory'
         ],
         'initializers' => [
-            'AMQPInitializer' => new \AMQPModule\AMQPInitializer(),
+            'AMQPInitializer' => new \AMQPModule\ServiceManager\AMQPInitializer(),
         ]
     ],
 ];

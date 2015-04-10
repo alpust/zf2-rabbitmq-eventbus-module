@@ -46,11 +46,11 @@ return [
     ],
     'service_manager' => [
         'abstract_factories' => [
-            'AMQPModule\Factory\ConnectionAbstractFactory',
-            'AMQPModule\Factory\ExchangeAbstractFactory',
-            'AMQPModule\Factory\QueueAbstractFactory',
-            'AMQPModule\Factory\ConsumerAbstractFactory',
-            'AMQPModule\Factory\PublisherAbstractFactory'
+            'AMQPModule\ServiceManager\Factory\ConnectionAbstractFactory',
+            'AMQPModule\ServiceManager\Factory\ExchangeAbstractFactory',
+            'AMQPModule\ServiceManager\Factory\QueueAbstractFactory',
+            'AMQPModule\ServiceManager\Factory\ConsumerAbstractFactory',
+            'AMQPModule\ServiceManager\Factory\PublisherAbstractFactory'
         ],
         'initializers' => [
             'AMQPInitializer' => new \AMQPModule\ServiceManager\AMQPInitializer(),

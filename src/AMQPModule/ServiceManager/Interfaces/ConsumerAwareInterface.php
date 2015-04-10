@@ -1,8 +1,7 @@
 <?php
-namespace AMQPModule\Interfaces;
+namespace AMQPModule\ServiceManager\Interfaces;
 
-
-use AMQPModule\Consumer;
+use AMQPModule\Service\Consumer;
 
 interface ConsumerAwareInterface
 {

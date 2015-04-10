@@ -1,6 +1,5 @@
 <?php
-namespace AMQPModule\Factory;
-
+namespace AMQPModule\ServiceManager\Factory;
 
 use Zend\ServiceManager\ServiceLocatorInterface;
 

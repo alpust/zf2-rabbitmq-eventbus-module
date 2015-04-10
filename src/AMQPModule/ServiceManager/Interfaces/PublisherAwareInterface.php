@@ -1,8 +1,7 @@
 <?php
-namespace AMQPModule\Interfaces;
+namespace AMQPModule\ServiceManager\Interfaces;
 
-
-use AMQPModule\Publisher;
+use AMQPModule\Service\Publisher;
 
 interface PublisherAwareInterface
 {

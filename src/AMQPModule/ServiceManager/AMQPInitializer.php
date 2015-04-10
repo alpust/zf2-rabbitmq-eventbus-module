@@ -1,9 +1,9 @@
 <?php
 namespace AMQPModule;
 
-use AMQPModule\Interfaces\AMQPAwareInterface;
-use AMQPModule\Interfaces\ConsumerAwareInterface;
-use AMQPModule\Interfaces\PublisherAwareInterface;
+use AMQPModule\ServiceManager\Interfaces\AMQPAwareInterface;
+use AMQPModule\ServiceManager\Interfaces\ConsumerAwareInterface;
+use AMQPModule\ServiceManager\Interfaces\PublisherAwareInterface;
 use Zend\ServiceManager\InitializerInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 

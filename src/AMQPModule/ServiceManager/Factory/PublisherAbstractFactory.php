@@ -1,10 +1,7 @@
 <?php
-namespace AMQPModule\Factory;
+namespace AMQPModule\ServiceManager\Factory;
 
-use AMQPModule\Publisher;
-use PhpAmqpLib\Connection\AbstractConnection;
-use Zend\ServiceManager\AbstractFactoryInterface;
-use Zend\ServiceManager\Exception\ServiceNotCreatedException;
+use AMQPModule\Service\Publisher;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 class PublisherAbstractFactory extends AMQPAbstractFactory

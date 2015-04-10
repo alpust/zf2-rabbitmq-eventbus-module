@@ -1,6 +1,7 @@
 <?php
 namespace AMQPModule;
 
+use AMQPModule\Service\Consumer;
 
 class ConsumerAwareTrait
 {
@@ -18,16 +19,15 @@ class ConsumerAwareTrait
     }
 
     /**
-     * @param Publisher $consumer
-     * @return mixed
+     * @param Consumer $consumer
      */
-    public function setConsumer(Publisher $consumer)
+    public function setConsumer(Consumer $consumer)
     {
         $this->consumer = $consumer;
     }
 
     /**
-     * @return Publisher
+     * @return mixed
      */
     public function getConsumer()
     {

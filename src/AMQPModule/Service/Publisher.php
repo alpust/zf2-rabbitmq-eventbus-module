@@ -1,5 +1,5 @@
 <?php
-namespace AMQPModule;
+namespace AMQPModule\Service;
 
 
 use Zend\Stdlib\ArrayUtils;

@@ -1,9 +1,7 @@
 <?php
-namespace AMQPModule\Factory;
-
+namespace AMQPModule\ServiceManager\Factory;
 
 use Zend\ServiceManager\AbstractFactoryInterface;
-use Zend\ServiceManager\Exception\ServiceNotCreatedException;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 abstract class AMQPAbstractFactory implements AbstractFactoryInterface

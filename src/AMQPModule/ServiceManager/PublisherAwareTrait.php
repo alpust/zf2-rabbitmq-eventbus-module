@@ -1,6 +1,7 @@
 <?php
 namespace AMQPModule;
 
+use AMQPModule\Service\Publisher;
 
 trait PublisherAwareTrait
 {
@@ -19,7 +20,6 @@ trait PublisherAwareTrait
 
     /**
      * @param Publisher $publisher
-     * @return mixed
      */
     public function setPublisher(Publisher $publisher)
     {

@@ -29,7 +29,7 @@ class ExchangeAbstractFactory extends  AMQPAbstractFactory
         $exchangeConfig = array_merge($this->defaults, $this->getServiceConfig($serviceLocator, $requested));
 
         $connectionName = $this->configKey . '.connections.default';
-        if(!empty($exchangeConfig['connection']) && is_string($exchangeConfig['connection'])) {
+        if(isset($exchangeConfig['connection']) && is_string($exchangeConfig['connection'])) {
             $connectionName = $this->configKey . '.connections.' . $exchangeConfig['connection'];
         }
         /** @var \AMQPConnection $connection */
@@ -42,12 +42,14 @@ class ExchangeAbstractFactory extends  AMQPAbstractFactory
         $channel = new \AMQPChannel($connection);
 
         $exchange = new \AMQPExchange($channel);
-        $exchange->setName($exchangeConfig['name']);
+        $exchange->setName($requested);
         $exchange->setType($exchangeConfig['type']);
         $exchange->setArguments($exchangeConfig['arguments']);
         $exchange->setFlags($exchangeConfig['flags']);
-        if(!$exchange->declareExchange()) {
-            throw new ServiceNotCreatedException('Can not declare exchange ' . $exchange->getName());
+        if(!$requested == '') {
+            if(!$exchange->declareExchange()) {
+                throw new ServiceNotCreatedException('Can not declare exchange ' . $exchange->getName());
+            }
         }
 
         return $exchange;

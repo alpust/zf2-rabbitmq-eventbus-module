@@ -9,17 +9,17 @@ class Consumer
     /** @var \AMQPQueue  */
     protected $queue;
 
-    protected $defaultConfig;
+    protected $defaultConfig = [
+        'flags' => AMQP_AUTOACK,
+        'tag' => null
+    ];
 
     function __construct(
         \AMQPQueue $queue,
-        $config = [
-            'flags' => AMQP_AUTOACK,
-            'tag' => null
-        ]
+        $config = []
     ){
         $this->queue = $queue;
-        $this->defaultConfig = $config;
+        $this->defaultConfig = array_merge($this->defaultConfig, $config);
     }
 
     public function consume(callable $callback, $flags = AMQP_AUTOACK, $tag = null)

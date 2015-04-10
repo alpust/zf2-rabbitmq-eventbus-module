@@ -30,19 +30,22 @@ class QueueAbstractFactory extends AMQPAbstractFactory
         $queueConfig = array_merge($this->defaults, $this->getServiceConfig($serviceLocator, $requested));
 
         $exchangeName = $this->configKey . '.exchanges.default';
-        if(!empty($queueConfig['exchange']) && is_string($queueConfig['exchange'])) {
+        if(isset($queueConfig['exchange']) && is_string($queueConfig['exchange'])) {
             $exchangeName = $this->configKey . '.exchanges.' . $queueConfig['exchange'];
         }
         /** @var \AMQPExchange $exchange */
         $exchange = $serviceLocator->get($exchangeName);
 
         $queue = new \AMQPQueue($exchange->getChannel());
-        $queue->setName($queueConfig['name']);
+        $queue->setName($requested);
         $queue->setFlags($queueConfig['flags']);
         $queue->setArguments($queueConfig['arguments']);
         $queue->declareQueue();
-        if(!$queue->bind($exchange->getName(), $queueConfig['routing_key'])) {
-            throw new ServiceNotCreatedException('Can not bind ' . $queue->getName() . ' to an exchange ' . $exchange->getName());
+        if($exchange->getName()) {
+            echo 'bind ' .$requested . ' ' . $exchange->getName() . ' ' . $queueConfig['routing_key'];
+            if(!$queue->bind($exchange->getName(), $queueConfig['routing_key'])) {
+                throw new ServiceNotCreatedException('Can not bind ' . $queue->getName() . ' to an exchange ' . $exchange->getName());
+            }
         }
 
         return $queue;

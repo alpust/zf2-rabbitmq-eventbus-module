@@ -24,7 +24,7 @@ class PublisherAbstractFactory extends AMQPAbstractFactory
         $publisherConfig = $this->getServiceConfig($serviceLocator, $requested);
 
         $exchangeName = $this->configKey . '.exchanges.default';
-        if(!empty($publisherConfig['exchange']) && is_string($publisherConfig['exchange'])) {
+        if(isset($publisherConfig['exchange']) && is_string($publisherConfig['exchange'])) {
             $exchangeName = $this->configKey . '.exchanges.' . $publisherConfig['exchange'];
         }
 

@@ -11,18 +11,18 @@ class Publisher
     protected $exchange;
 
     /** @var array  */
-    protected $defaultConfig;
+    protected $defaultConfig = [
+        'routing_key' => null,
+        'flags' => AMQP_NOPARAM,
+        'attributes' => []
+    ];
 
     function __construct(
         \AMQPExchange $exchange,
-        $config = [
-            'routing_key' => null,
-            'flags' => AMQP_NOPARAM,
-            'attributes' => []
-        ]
+        $config = []
     ){
         $this->exchange = $exchange;
-        $this->defaultConfig = $config;
+        $this->defaultConfig = array_merge($this->defaultConfig, $config);
     }
 
     public function publish($message, $routingKey = null, $flags = AMQP_NOPARAM, array $attributes = [])

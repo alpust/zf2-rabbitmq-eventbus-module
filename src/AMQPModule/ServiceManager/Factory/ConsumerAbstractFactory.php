@@ -25,7 +25,7 @@ class ConsumerAbstractFactory extends AMQPAbstractFactory
         $consumerConfig = $this->getServiceConfig($serviceLocator, $requested);
 
         $queueName = $this->configKey . '.queues.default';
-        if(!empty($consumerConfig['queue']) && is_string($consumerConfig['queue'])) {
+        if(isset($consumerConfig['queue']) && is_string($consumerConfig['queue'])) {
             $queueName = $this->configKey . '.queues.' . $consumerConfig['queue'];
         }
 

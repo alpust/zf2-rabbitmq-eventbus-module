@@ -13,7 +13,6 @@ return [
         'exchanges' => [
             'default' => [
                 'connection' => 'default',
-                'name' => 'default_exchange',
                 'type' => AMQP_EX_TYPE_DIRECT,
                 'flags' => AMQP_NOPARAM,
                 'arguments' => []
@@ -23,7 +22,6 @@ return [
             'default' => [
                 'exchange' => 'default',
                 'routing_key' => null,
-                'name' => 'default_queue',
                 'flags' => AMQP_NOPARAM,
                 'arguments' => []
             ]

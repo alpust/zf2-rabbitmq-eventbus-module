@@ -28,8 +28,7 @@ trait BusPublisherAwareTrait
     }
 
     /**
-     * @param BusPublisher $consumer
-     * @return mixed
+     * @param BusPublisher $publisher
      */
     public function setBusPublisher(BusPublisher $publisher)
     {

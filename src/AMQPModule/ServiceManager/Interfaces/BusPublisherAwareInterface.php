@@ -9,7 +9,7 @@
 namespace AMQPModule\ServiceManager\Interfaces;
 
 
-use AMQPModule\ServiceManager\Factory\BusPublisher;
+use AMQPModule\Service\BusPublisher;
 
 interface BusPublisherAwareInterface
 {

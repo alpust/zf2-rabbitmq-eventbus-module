@@ -2,6 +2,8 @@
 namespace AMQPModule\ServiceManager;
 
 use AMQPModule\ServiceManager\Interfaces\AMQPAwareInterface;
+use AMQPModule\ServiceManager\Interfaces\BusConsumerAwareInterface;
+use AMQPModule\ServiceManager\Interfaces\BusPublisherAwareInterface;
 use AMQPModule\ServiceManager\Interfaces\ConsumerAwareInterface;
 use AMQPModule\ServiceManager\Interfaces\PublisherAwareInterface;
 use Zend\ServiceManager\InitializerInterface;
@@ -26,6 +28,14 @@ class AMQPInitializer implements InitializerInterface
         if ($instance instanceof ConsumerAwareInterface || $instance instanceof AMQPAwareInterface) {
             $consumer = $serviceLocator->get($instance->getConsumerName());
             $instance->setConsumer($consumer);
+        }
+
+        if($instance instanceof BusConsumerAwareInterface) {
+            $instance->setBusConsumer($serviceLocator->get('amqp.messageBus.consumer'));
+        }
+
+        if($instance instanceof BusPublisherAwareInterface) {
+            $instance->setBusPublisher($serviceLocator->get('amqp.messageBus.publisher'));
         }
     }
 

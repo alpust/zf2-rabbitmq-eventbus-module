@@ -16,6 +16,10 @@ return [
                 'type' => AMQP_EX_TYPE_DIRECT,
                 'flags' => AMQP_NOPARAM,
                 'arguments' => []
+            ],
+            'messageBus' => [
+                'connection' => 'default',
+                'type' => AMQP_EX_TYPE_TOPIC,
             ]
         ],
         'queues' => [
@@ -51,6 +55,10 @@ return [
             'AMQPModule\ServiceManager\Factory\QueueAbstractFactory',
             'AMQPModule\ServiceManager\Factory\ConsumerAbstractFactory',
             'AMQPModule\ServiceManager\Factory\PublisherAbstractFactory'
+        ],
+        'factories' => [
+            'amqp.messageBus.publisher' => 'AMQPModule\Service\BusPublisherFactory',
+            'amqp.messageBus.consumer' => 'AMQPModule\Service\BusConsumerFactory'
         ],
         'initializers' => [
             'AMQPInitializer' => new \AMQPModule\ServiceManager\AMQPInitializer(),

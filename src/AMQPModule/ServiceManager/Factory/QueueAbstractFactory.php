@@ -42,7 +42,6 @@ class QueueAbstractFactory extends AMQPAbstractFactory
         $queue->setArguments($queueConfig['arguments']);
         $queue->declareQueue();
         if($exchange->getName()) {
-            echo 'bind ' .$requested . ' ' . $exchange->getName() . ' ' . $queueConfig['routing_key'];
             if(!$queue->bind($exchange->getName(), $queueConfig['routing_key'])) {
                 throw new ServiceNotCreatedException('Can not bind ' . $queue->getName() . ' to an exchange ' . $exchange->getName());
             }

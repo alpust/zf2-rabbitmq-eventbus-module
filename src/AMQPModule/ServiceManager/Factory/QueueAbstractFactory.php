@@ -11,6 +11,7 @@ class QueueAbstractFactory extends AMQPAbstractFactory
 
     protected $defaults = [
         'name' => 'default_queue',
+        'routing_key' => null,
         'flags' => AMQP_NOPARAM,
         'arguments' => []
     ];
@@ -40,7 +41,7 @@ class QueueAbstractFactory extends AMQPAbstractFactory
         $queue->setFlags($queueConfig['flags']);
         $queue->setArguments($queueConfig['arguments']);
         $queue->declareQueue();
-        if(!$queue->bind($exchange->getName())) {
+        if(!$queue->bind($exchange->getName(), $queueConfig['routing_key'])) {
             throw new ServiceNotCreatedException('Can not bind ' . $queue->getName() . ' to an exchange ' . $exchange->getName());
         }
 

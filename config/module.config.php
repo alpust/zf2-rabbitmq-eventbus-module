@@ -22,6 +22,7 @@ return [
         'queues' => [
             'default' => [
                 'exchange' => 'default',
+                'routing_key' => null,
                 'name' => 'default_queue',
                 'flags' => AMQP_NOPARAM,
                 'arguments' => []

@@ -6,7 +6,8 @@ return [
                 'host' => 'localhost',
                 'port' => 5672,
                 'user' => 'guest',
-                'password' => 'guest'
+                'password' => 'guest',
+                'vhost' => '/'
             ]
         ],
         'exchanges' => [
@@ -14,7 +15,7 @@ return [
                 'connection' => 'default',
                 'name' => 'default_exchange',
                 'type' => AMQP_EX_TYPE_DIRECT,
-                'flags' => AMQP_PASSIVE,
+                'flags' => AMQP_NOPARAM,
                 'arguments' => []
             ]
         ],
@@ -22,7 +23,7 @@ return [
             'default' => [
                 'exchange' => 'default',
                 'name' => 'default_queue',
-                'flags' => AMQP_PASSIVE,
+                'flags' => AMQP_NOPARAM,
                 'arguments' => []
             ]
         ],

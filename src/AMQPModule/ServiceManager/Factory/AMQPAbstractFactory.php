@@ -24,7 +24,7 @@ abstract class AMQPAbstractFactory implements AbstractFactoryInterface
     public function canCreateServiceWithName(ServiceLocatorInterface $serviceLocator, $name, $requestedName)
     {
         $requested = explode('.', $requestedName);
-        if (count($requested) !== 3 || $requested[0] !== $this->configKey || $requested[1] !== 'consumers') {
+        if (count($requested) !== 3 || $requested[0] !== $this->configKey || $requested[1] !== $this->configSubKey) {
             return false;
         }
 

@@ -13,7 +13,8 @@ class ConnectionAbstractFactory extends AMQPAbstractFactory
         'host' => 'localhost',
         'port' => 5672,
         'user' => 'guest',
-        'password' => 'guest'
+        'password' => 'guest',
+        'vhost' => '/'
     ];
 
     /**

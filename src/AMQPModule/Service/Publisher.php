@@ -34,7 +34,7 @@ class Publisher
                 $config = $this->getMessageConfig($routingKey, $flags, $attributes);
             }
 
-            return $this->exchange->publish($message, $config['routing_key'], $config['flags'], $config['arguments']);
+            return $this->exchange->publish($message, $config['routing_key'], $config['flags'], $config['attributes']);
         } catch(\Exception $e) {
             return false;
         }

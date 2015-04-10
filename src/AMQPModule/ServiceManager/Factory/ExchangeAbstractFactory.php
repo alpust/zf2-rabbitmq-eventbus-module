@@ -1,6 +1,7 @@
 <?php
 namespace AMQPModule\ServiceManager\Factory;
 
+use Zend\ServiceManager\Exception\ServiceNotCreatedException;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 class ExchangeAbstractFactory extends  AMQPAbstractFactory
@@ -11,17 +12,16 @@ class ExchangeAbstractFactory extends  AMQPAbstractFactory
     protected $defaults = [
         'name' => 'default_exchange',
         'type' => AMQP_EX_TYPE_DIRECT,
-        'flags' => AMQP_PASSIVE,
+        'flags' => AMQP_NOPARAM,
         'arguments' => []
     ];
 
     /**
-     * Create service with name
-     *
      * @param ServiceLocatorInterface $serviceLocator
      * @param $name
      * @param $requestedName
-     * @return mixed
+     * @return \AMQPExchange
+     * @throws ServiceNotCreatedException
      */
     public function createServiceWithName(ServiceLocatorInterface $serviceLocator, $name, $requestedName)
     {
@@ -46,6 +46,9 @@ class ExchangeAbstractFactory extends  AMQPAbstractFactory
         $exchange->setType($exchangeConfig['type']);
         $exchange->setArguments($exchangeConfig['arguments']);
         $exchange->setFlags($exchangeConfig['flags']);
+        if(!$exchange->declareExchange()) {
+            throw new ServiceNotCreatedException('Can not declare exchange ' . $exchange->getName());
+        }
 
         return $exchange;
     }

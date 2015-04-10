@@ -11,7 +11,7 @@ class QueueAbstractFactory extends AMQPAbstractFactory
 
     protected $defaults = [
         'name' => 'default_queue',
-        'flags' => AMQP_PASSIVE,
+        'flags' => AMQP_NOPARAM,
         'arguments' => []
     ];
 
@@ -34,9 +34,6 @@ class QueueAbstractFactory extends AMQPAbstractFactory
         }
         /** @var \AMQPExchange $exchange */
         $exchange = $serviceLocator->get($exchangeName);
-        if(!$exchange->declareExchange()) {
-            throw new ServiceNotCreatedException('Can not declare exchange ' . $exchange->getName());
-        }
 
         $queue = new \AMQPQueue($exchange->getChannel());
         $queue->setName($queueConfig['name']);

@@ -27,7 +27,7 @@ class EventBus implements EventManagerAwareInterface
 
     public function subscribe()
     {
-        $callback = function(EventInterface $event){
+        $callback = function($event){
             $this->getEventManager()->trigger($this->eventFactory->restore($event));
         };
         $callback->bindTo($this);

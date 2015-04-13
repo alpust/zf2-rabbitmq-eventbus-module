@@ -1,6 +1,6 @@
 {
-    "name": "paulchyrilov/amqp-zf2-module",
-    "description": "Zend 2 amqp module",
+    "name": "paulchyrilov/zf2-rabbitmq-eventbus-module",
+    "description": "Zend 2 event bus module using rabbitmq",
     "type": "library",
     "license": "MIT",
     "keywords": [

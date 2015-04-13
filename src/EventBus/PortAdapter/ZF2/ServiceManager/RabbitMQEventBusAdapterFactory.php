@@ -16,11 +16,11 @@ class RabbitMQEventBusAdapterFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $currentApplication = $serviceLocator->get('CurrentApplication');
         $exchange = $serviceLocator->get('amqp.exchanges.messageBus');
         $queue = new \AMQPQueue($exchange->getChannel());
-        $queue->setName($currentApplication->getName());
-        $queue->setFlags(AMQP_DURABLE);
+        /** @TODO make queue application-dependable */
+//        $queue->setName();
+//        $queue->setFlags(AMQP_DURABLE);
         $queue->declareQueue();
 
         return new EventBusAdapter($queue, $exchange);

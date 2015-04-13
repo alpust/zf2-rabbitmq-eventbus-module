@@ -1,10 +1,10 @@
 <?php
-namespace AMQPModule\ServiceManager\Factory;
+namespace EventBus\PortAdapter\ZF2\ServiceManager;
 
 use Zend\ServiceManager\Exception\ServiceNotCreatedException;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
-class ExchangeAbstractFactory extends  AMQPAbstractFactory
+class ExchangeAbstractFactory extends  RabbitMQAbstractFactory
 {
 
     protected $configSubKey = 'exchanges';

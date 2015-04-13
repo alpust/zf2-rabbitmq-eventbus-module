@@ -1,17 +1,13 @@
 <?php
+namespace EventBus\PortAdapter\ZF2\ServiceManager;
 
 
-namespace AMQPModule\Service;
-
-
+use EventBus\PortAdapter\RabbitMQ\EventBusAdapter;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
-class BusConsumerFactory implements FactoryInterface
+class RabbitMQEventBusAdapterFactory implements FactoryInterface
 {
-
-    protected static $queues = [];
-
     /**
      * Create service
      *
@@ -20,16 +16,15 @@ class BusConsumerFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-
-        /** @var \AMQPExchange $exchange */
+        $currentApplication = $serviceLocator->get('CurrentApplication');
         $exchange = $serviceLocator->get('amqp.exchanges.messageBus');
-
         $queue = new \AMQPQueue($exchange->getChannel());
-        $queue->setName('messageBusQueue' . count($this::$queues));
+        $queue->setName($currentApplication->getName());
+        $queue->setFlags(AMQP_DURABLE);
         $queue->declareQueue();
-        $this::$queues[$queue->getName()] = $queue;
 
-        return new BusConsumer($queue, $exchange->getName());
+        return new EventBusAdapter($queue, $exchange);
     }
+
 
 }

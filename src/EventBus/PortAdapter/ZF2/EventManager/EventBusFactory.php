@@ -1,15 +1,12 @@
 <?php
-
-
-namespace AMQPModule\Service;
+namespace EventBus\PortAdapter\ZF2\EventManager;
 
 
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
-class BusPublisherFactory implements FactoryInterface
+class EventBusFactory implements FactoryInterface
 {
-
     /**
      * Create service
      *
@@ -18,8 +15,10 @@ class BusPublisherFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        return new BusPublisher($serviceLocator->get('amqp.exchanges.messageBus'));
+        return new EventBus(
+            $serviceLocator->get('eventBus.portAdapter.rabbitMQ.adapter'),
+            new EventFactory()
+        );
     }
-
 
 }

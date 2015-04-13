@@ -25,7 +25,7 @@ class Module implements
 
     public function getConfig()
     {
-        $config = include $this->getModuleDir() . '/../../config/' . $this->configFile;
+        $config = include $this->getModuleDir() . '/config/' . $this->configFile;
         return $config;
     }
 

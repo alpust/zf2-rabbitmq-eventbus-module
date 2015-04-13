@@ -1,10 +1,10 @@
 <?php
-namespace AMQPModule\ServiceManager\Factory;
+namespace EventBus\PortAdapter\ZF2\ServiceManager;
 
 use Zend\ServiceManager\AbstractFactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
-abstract class AMQPAbstractFactory implements AbstractFactoryInterface
+abstract class RabbitMQAbstractFactory implements AbstractFactoryInterface
 {
 
     protected $configKey = 'amqp';

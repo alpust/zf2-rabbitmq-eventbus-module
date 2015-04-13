@@ -1,5 +1,5 @@
 <?php
-namespace AMQPModule;
+namespace EventBus;
 
 use Zend\ModuleManager\Feature\AutoloaderProviderInterface;
 use Zend\ModuleManager\Feature\ConfigProviderInterface;

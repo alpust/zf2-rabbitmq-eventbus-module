@@ -22,7 +22,7 @@
     "minimum-stability": "dev",
     "autoload": {
         "psr-0": {
-            "AMQPModule\\": "src/"
+            "EventBus\\": "src/PortAdapter/ZF2/"
         }
     }
 }

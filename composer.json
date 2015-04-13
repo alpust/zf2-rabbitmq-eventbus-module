@@ -22,7 +22,7 @@
     "minimum-stability": "dev",
     "autoload": {
         "psr-0": {
-            "EventBus\\": "src/PortAdapter/ZF2/"
+            "EventBus\\": "src/"
         }
     }
 }

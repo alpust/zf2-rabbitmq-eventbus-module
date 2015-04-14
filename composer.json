@@ -6,20 +6,28 @@
     "keywords": [
         "module",
         "zf2",
+        "event-bus",
+        "rabbitmq",
         "amqp"
+    ],
+    "authors":     [
+      {
+        "name": "Paul Churilov",
+        "email": "paulchurilov@gmail.com"
+      }
     ],
     "require": {
         "php":                               ">=5.3.3",
-        "ext-amqp"  : ">=1.4.0",
+        "ext-amqp"  :                        ">=1.4.0",
         "zendframework/zend-stdlib":         ">=2.2",
         "zendframework/zend-mvc":            ">=2.2",
         "zendframework/zend-servicemanager": ">=2.2",
-        "zendframework/zend-modulemanager": ">=2.2"
+        "zendframework/zend-modulemanager":  ">=2.2"
     },
     "require-dev": {
         "pdezwart/php-amqp" : "dev-master"
     },
-    "minimum-stability": "dev",
+    "minimum-stability": "stable",
     "autoload": {
         "psr-0": {
             "EventBus\\": "src/"

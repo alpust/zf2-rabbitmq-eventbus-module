@@ -13,7 +13,7 @@ class RabbitMQEventBusAdapterFactory implements FactoryInterface
      * Create service
      *
      * @param ServiceLocatorInterface $serviceLocator
-     * @return mixed
+     * @return EventBusAdapter
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {

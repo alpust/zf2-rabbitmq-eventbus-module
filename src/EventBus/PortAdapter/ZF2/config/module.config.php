@@ -22,6 +22,7 @@ return [
         ]
     ],
     'amqp' => [
+        'queueName' => '',
         'connections' => [
             'default' => [
                 'host' => 'localhost',

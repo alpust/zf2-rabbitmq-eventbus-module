@@ -27,13 +27,18 @@ class ConsoleController extends AbstractActionController
     public function testPublishAction()
     {
 
+        $config = $this->getServiceLocator()->get('Config');
+
+        $context = $config['amqp']['boundedContext'];
+
         $message = $this->params()->fromRoute('message', 'default');
 
-        $this->getEventManager()->getSharedManager()->attach('*', 'inventory.test', function($data){
+
+        $this->getEventManager()->getSharedManager()->attach('*', $context . '.test', function($data){
             echo "sync\n"; var_dump($data->getName(), $data->getParams());
         });
 
-        $this->getEventManager()->trigger('inventory.test', null, [$message]);
+        $this->getEventManager()->trigger($context . '.test', null, [$message]);
 
     }
 

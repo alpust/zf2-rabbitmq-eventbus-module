@@ -41,6 +41,7 @@ class EventBusAdapter implements IEventBusAdapterInterface
     protected function prepareMessage($message)
     {
         $attributes = $this->messageAttributes;
+        $attributes['app_id'] = $this->queue->getName();
 
         if(is_string($message)) {
             $attributes['content_type'] = 'text/plain';
@@ -63,7 +64,9 @@ class EventBusAdapter implements IEventBusAdapterInterface
         }
         $callback = function(\AMQPEnvelope $message){
             try {
-                call_user_func($this->callback, $this->unpackMessage($message));
+                if($message->getAppId() !== $this->queue->getName()) {
+                    call_user_func($this->callback, $this->unpackMessage($message));
+                }
                 $this->queue->ack($message->getDeliveryTag());
             } catch (\Exception $e) {
                 $this->processFailedSubscription($message);

@@ -21,10 +21,10 @@ class RabbitMQEventBusAdapterFactory implements FactoryInterface
 	    /** @var \AMQPExchange $exchange */
         $exchange = $serviceLocator->get('amqp.exchanges.messageBus');
         $queue = new \AMQPQueue($exchange->getChannel());
-        if(empty($config['amqp']['queueName'])) {
-	        throw new ServiceNotCreatedException('Please specify queueName in amqp config section. It should be application-dependable.');
+        if(empty($config['amqp']['boundedContext'])) {
+	        throw new ServiceNotCreatedException('Please specify boundedContext in amqp config section. It should be application-dependable.');
         }
-        $queue->setName($config['amqp']['queueName']);
+        $queue->setName($config['amqp']['boundedContext']);
         $queue->setFlags(AMQP_DURABLE);
         $queue->declareQueue();
 

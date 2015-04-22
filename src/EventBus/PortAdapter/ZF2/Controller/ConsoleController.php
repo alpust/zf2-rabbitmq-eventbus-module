@@ -14,8 +14,9 @@ class ConsoleController extends AbstractActionController
 
     public function testConsumeAction()
     {
-        $this->getEventManager()->getSharedManager()->attach('*', 'test', function($data){
-            var_dump($data);
+        $this->getEventManager()->getSharedManager()->attach('*', '*', function($data){
+            echo "async\n";
+            var_dump($data->getName(), $data->getParams());
         });
 
         $eventBus = $this->getServiceLocator()->get('EventBus');
@@ -28,9 +29,11 @@ class ConsoleController extends AbstractActionController
 
         $message = $this->params()->fromRoute('message', 'default');
 
-        $eventBus = $this->getServiceLocator()->get('EventBus');
+        $this->getEventManager()->getSharedManager()->attach('*', 'inventory.test', function($data){
+            echo "sync\n"; var_dump($data->getName(), $data->getParams());
+        });
 
-        $eventBus->publish(['name' => 'test', 'params' => [$message]]);
+        $this->getEventManager()->trigger('inventory.test', null, [$message]);
 
     }
 

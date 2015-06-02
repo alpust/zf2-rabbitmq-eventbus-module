@@ -17,18 +17,23 @@ class RabbitMQEventBusAdapterFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-	    $config = $serviceLocator->get('Config');
-	    /** @var \AMQPExchange $exchange */
-        $exchange = $serviceLocator->get('amqp.exchanges.messageBus');
-        $queue = new \AMQPQueue($exchange->getChannel());
-        if(empty($config['amqp']['boundedContext'])) {
-	        throw new ServiceNotCreatedException('Please specify boundedContext in amqp config section. It should be application-dependable.');
-        }
-        $queue->setName($config['amqp']['boundedContext']);
-        $queue->setFlags(AMQP_DURABLE);
-        $queue->declareQueue();
+        $config = $serviceLocator->get('Config');
 
-        return new EventBusAdapter($queue, $exchange);
+        if(empty($config['amqp']['boundedContext'])) {
+            throw new ServiceNotCreatedException('Please specify boundedContext in amqp config section. It should be application-dependable.');
+        }
+
+        $queueConfig = [
+            'name' => $config['amqp']['boundedContext'],
+            'flags' => AMQP_DURABLE
+        ];
+
+        $exchangeConfig = $serviceLocator->get('amqp.exchanges.messageBus');
+
+        /** @var \AMQPConnection $connection */
+        $connection = $serviceLocator->get($exchangeConfig['connection']);
+
+        return new EventBusAdapter($queueConfig, $exchangeConfig, $connection);
     }
 
 

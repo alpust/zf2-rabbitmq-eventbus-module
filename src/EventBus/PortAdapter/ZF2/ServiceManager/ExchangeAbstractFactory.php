@@ -28,31 +28,15 @@ class ExchangeAbstractFactory extends  RabbitMQAbstractFactory
         $requested = explode('.', $requestedName)[2];
         $exchangeConfig = array_merge($this->defaults, $this->getServiceConfig($serviceLocator, $requested));
 
+        $exchangeConfig['name'] = $requested;
+
         $connectionName = $this->configKey . '.connections.default';
         if(isset($exchangeConfig['connection']) && is_string($exchangeConfig['connection'])) {
             $connectionName = $this->configKey . '.connections.' . $exchangeConfig['connection'];
         }
-        /** @var \AMQPConnection $connection */
-        $connection = $serviceLocator->get($connectionName);
+        $exchangeConfig['connection'] = $connectionName;
 
-        if(!$connection->isConnected()) {
-            $connection->connect();
-        }
-
-        $channel = new \AMQPChannel($connection);
-
-        $exchange = new \AMQPExchange($channel);
-        $exchange->setName($requested);
-        $exchange->setType($exchangeConfig['type']);
-        $exchange->setArguments($exchangeConfig['arguments']);
-        $exchange->setFlags($exchangeConfig['flags']);
-        if(!$requested == '') {
-            if(!$exchange->declareExchange()) {
-                throw new ServiceNotCreatedException('Can not declare exchange ' . $exchange->getName());
-            }
-        }
-
-        return $exchange;
+        return $exchangeConfig;
     }
 
 }

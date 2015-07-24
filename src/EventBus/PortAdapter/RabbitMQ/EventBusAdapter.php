@@ -66,10 +66,19 @@ class EventBusAdapter implements IEventBusAdapterInterface
         if(!$this->getQueue()->bind($this->getExchange()->getName())) {
             throw new \Exception('Can not bind ' . $this->getQueue()->getName() . ' to an exchange ' . $this->getExchange()->getName());
         }
+
         $callback = function(\AMQPEnvelope $message){
             try {
-                if($message->getAppId() !== $this->getQueue()->getName()) {
-                    call_user_func($this->callback, $this->unpackMessage($message));
+                switch ($message->getType()) {
+                    case 'eventBus.consumer-stop':
+                        $this->getQueue()->ack($message->getDeliveryTag());
+                        call_user_func($this->callback, 'eventBus.consumer-stop');
+                        $this->stopConsumer();
+                        break;
+                    default:
+                        if($message->getAppId() !== $this->getQueue()->getName()) {
+                            call_user_func($this->callback, $this->unpackMessage($message));
+                        }
                 }
                 $this->getQueue()->ack($message->getDeliveryTag());
             } catch (\Exception $e) {
@@ -120,13 +129,14 @@ class EventBusAdapter implements IEventBusAdapterInterface
 
     protected function unpackMessage(\AMQPEnvelope $message)
     {
-        if($message->getContentType() == 'text/plain') {
-            return $message->getBody();
-        } elseif ($message->getContentType() == 'serialized/array') {
-            return unserialize($message->getBody());
+        switch ($message->getContentType()) {
+            case 'text/plain':
+                return $message->getBody();
+            case 'serialized/array':
+                return unserialize($message->getBody());
+            default:
+                throw new \Exception('Unsupported message content type ' . $message->getContentType());
         }
-
-        throw new \Exception('Unsupported message content type ' . $message->getContentType());
     }
 
     /**
@@ -178,6 +188,12 @@ class EventBusAdapter implements IEventBusAdapterInterface
         }
 
         return $this->channel;
+    }
+
+    private function stopConsumer()
+    {
+        $this->getChannel()->getConnection()->disconnect();
+        exit("\nconsumer-stop signal received\n");
     }
 
 }

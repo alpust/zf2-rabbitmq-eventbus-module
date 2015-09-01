@@ -2,11 +2,12 @@
 namespace EventBus\PortAdapter\ZF2\EventManager;
 
 use EventBus\Application\IEventBusAdapterInterface;
+use EventBus\Application\IEventBusInterface;
 use Zend\EventManager\EventInterface;
 use Zend\EventManager\EventManagerAwareInterface;
 use Zend\EventManager\EventManagerAwareTrait;
 
-class EventBus implements EventManagerAwareInterface
+class EventBus implements EventManagerAwareInterface, IEventBusInterface
 {
 
     use EventManagerAwareTrait;

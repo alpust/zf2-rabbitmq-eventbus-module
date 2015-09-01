@@ -1,9 +1,6 @@
 <?php
 namespace EventBus\PortAdapter\ZF2\EventManager;
 
-
-use Zend\EventManager\Event;
-
 class EventFactory
 {
 

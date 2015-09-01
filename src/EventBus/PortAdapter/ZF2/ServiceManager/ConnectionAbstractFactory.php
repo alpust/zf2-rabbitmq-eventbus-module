@@ -12,7 +12,7 @@ class ConnectionAbstractFactory extends RabbitMQAbstractFactory
     protected $defaults = [
         'host' => 'localhost',
         'port' => 5672,
-        'user' => 'guest',
+        'login' => 'guest',
         'password' => 'guest',
         'vhost' => '/'
     ];

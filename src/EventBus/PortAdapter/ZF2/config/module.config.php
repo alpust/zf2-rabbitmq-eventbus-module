@@ -1,11 +1,33 @@
 <?php
 return [
+    'console' => [
+        'router' => [
+            'routes' => [
+                'eventBusTest'   => [
+                    'type'    => 'simple',
+                    'options' => [
+                        'route'    => 'eventBus console [consume|testConsume|testPublish]:action [<message>]',
+                        'defaults' => [
+                            'controller' => 'EventBusConsoleController',
+                            'action' => 'consume'
+                        ]
+                    ]
+                ],
+            ],
+        ]
+    ],
+    'controllers' => [
+        'invokables' => [
+            'EventBusConsoleController' => 'EventBus\PortAdapter\ZF2\Controller\ConsoleController'
+        ]
+    ],
     'amqp' => [
+        'boundedContext' => '',
         'connections' => [
             'default' => [
                 'host' => 'localhost',
                 'port' => 5672,
-                'user' => 'guest',
+                'login' => 'guest',
                 'password' => 'guest',
                 'vhost' => '/'
             ]

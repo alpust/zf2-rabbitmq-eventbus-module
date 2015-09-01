@@ -6,14 +6,26 @@ use EventBus\Application\IEventBusAdapterInterface;
 class EventBusAdapter implements IEventBusAdapterInterface
 {
 
-    /** @var \AMQPQueue  */
-    protected $queue;
-
-    /** @var \AMQPExchange  */
-    protected $exchange;
+    /** @var  array */
+    protected $queueConfig;
 
     /** @var   */
     protected $callback;
+
+    /** @var  array */
+    protected $exchangeConfig;
+
+    /** @var \AMQPQueue  */
+    private $queue;
+
+    /** @var \AMQPExchange  */
+    private $exchange;
+
+    /** @var  \AMQPChannel */
+    private $channel;
+
+    /** @var \AMQPConnection  */
+    private $connection;
 
     protected $messageAttributes = [
         'delivery_mode' => 2,
@@ -21,26 +33,67 @@ class EventBusAdapter implements IEventBusAdapterInterface
     ];
 
     public function __construct(
-        \AMQPQueue $queue,
-        \AMQPExchange $exchange
+        $queueConfig,
+        $exchangeConfig,
+        \AMQPConnection $connection
     ){
-        $this->queue = $queue;
-        $this->exchange = $exchange;
+        $this->queueConfig = $queueConfig;
+        $this->exchangeConfig = $exchangeConfig;
+        $this->connection = $connection;
+    }
+
+    function __destruct()
+    {
+        $this->getExchange()->getConnection()->disconnect();
     }
 
     public function publish($event = [])
     {
         try {
             list($message, $attributes) = $this->prepareMessage($event);
-            return $this->exchange->publish($message, null, AMQP_NOPARAM, $attributes);
+            $result = $this->getExchange()->publish($message, null, AMQP_NOPARAM, $attributes);
+            $this->getChannel()->getConnection()->disconnect();
+            return $result;
         } catch(\Exception $e) {
             return false;
         }
     }
 
+    public function subscribe(callable $callback)
+    {
+        $this->callback = $callback;
+
+        if(!$this->getQueue()->bind($this->getExchange()->getName())) {
+            throw new \Exception('Can not bind ' . $this->getQueue()->getName() . ' to an exchange ' . $this->getExchange()->getName());
+        }
+
+        $callback = function(\AMQPEnvelope $message){
+            try {
+                switch ($message->getType()) {
+                    case 'eventBus.consumer-stop':
+                        $this->getQueue()->ack($message->getDeliveryTag());
+                        call_user_func($this->callback, 'eventBus.consumer-stop');
+                        $this->stopConsumer();
+                        break;
+                    default:
+                        if($message->getAppId() !== $this->getQueue()->getName()) {
+                            call_user_func($this->callback, $this->unpackMessage($message));
+                        }
+                }
+                $this->getQueue()->ack($message->getDeliveryTag());
+            } catch (\Exception $e) {
+                $this->processFailedSubscription($message);
+            }
+        };
+        $callback->bindTo($this);
+
+        $this->getQueue()->consume($callback);
+    }
+
     protected function prepareMessage($message)
     {
         $attributes = $this->messageAttributes;
+        $attributes['app_id'] = $this->getQueue()->getName();
 
         if(is_string($message)) {
             $attributes['content_type'] = 'text/plain';
@@ -52,26 +105,6 @@ class EventBusAdapter implements IEventBusAdapterInterface
 
         throw new \Exception('Unsupported message type');
 
-    }
-
-    public function subscribe(callable $callback)
-    {
-        $this->callback = $callback;
-
-        if(!$this->queue->bind($this->exchange->getName())) {
-            throw new \Exception('Can not bind ' . $this->queue->getName() . ' to an exchange ' . $this->exchange->getName());
-        }
-        $callback = function(\AMQPEnvelope $message){
-            try {
-                call_user_func($this->callback, $this->unpackMessage($message));
-                $this->queue->ack($message->getDeliveryTag());
-            } catch (\Exception $e) {
-                $this->processFailedSubscription($message);
-            }
-        };
-        $callback->bindTo($this);
-
-        $this->queue->consume($callback);
     }
 
     protected function processFailedSubscription(\AMQPEnvelope $message)
@@ -89,20 +122,78 @@ class EventBusAdapter implements IEventBusAdapterInterface
                 ]
             );
 
-            $this->exchange->publish($message->getBody(), $message->getRoutingKey(), AMQP_NOPARAM, $attributes);
+            $this->getExchange()->publish($message->getBody(), $message->getRoutingKey(), AMQP_NOPARAM, $attributes);
         }
-        $this->queue->ack($message->getDeliveryTag());
+        $this->getQueue()->ack($message->getDeliveryTag());
     }
 
     protected function unpackMessage(\AMQPEnvelope $message)
     {
-        if($message->getContentType() == 'text/plain') {
-            return $message->getBody();
-        } elseif ($message->getContentType() == 'serialized/array') {
-            return unserialize($message->getBody());
+        switch ($message->getContentType()) {
+            case 'text/plain':
+                return $message->getBody();
+            case 'serialized/array':
+                return unserialize($message->getBody());
+            default:
+                throw new \Exception('Unsupported message content type ' . $message->getContentType());
+        }
+    }
+
+    /**
+     * @return \AMQPQueue
+     */
+    protected function getQueue()
+    {
+        if(!$this->queue) {
+            $this->queue = new \AMQPQueue($this->getChannel());
+            $this->queue->setName($this->queueConfig['name']);
+            $this->queue->setFlags($this->queueConfig['flags']);
+            $this->queue->declareQueue();
         }
 
-        throw new \Exception('Unsupported message content type ' . $message->getContentType());
+        return $this->queue;
+    }
+
+    /**
+     * @return \AMQPExchange
+     * @throws \Exception
+     */
+    protected function getExchange()
+    {
+
+        if(!$this->exchange) {
+
+            $this->exchange = new \AMQPExchange($this->getChannel());
+            $this->exchange->setName($this->exchangeConfig['name']);
+            $this->exchange->setType($this->exchangeConfig['type']);
+            $this->exchange->setArguments($this->exchangeConfig['arguments']);
+            $this->exchange->setFlags($this->exchangeConfig['flags']);
+
+            if(!$this->exchange->declareExchange()) {
+                throw new \Exception('Can not declare exchange ' . $this->exchange->getName());
+            }
+        }
+
+        return $this->exchange;
+    }
+
+    private function getChannel()
+    {
+        if(!$this->channel) {
+            if(!$this->connection->isConnected()) {
+                $this->connection->connect();
+            }
+
+            $this->channel = new \AMQPChannel($this->connection);
+        }
+
+        return $this->channel;
+    }
+
+    private function stopConsumer()
+    {
+        $this->getChannel()->getConnection()->disconnect();
+        exit("\nconsumer-stop signal received\n");
     }
 
 }

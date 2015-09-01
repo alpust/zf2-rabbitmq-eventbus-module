@@ -16,7 +16,8 @@ class EventBusFactory implements FactoryInterface
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         return new EventBus(
-            $serviceLocator->get('eventBus.portAdapter.rabbitMQ.adapter'),
+            $serviceLocator->get('eventBus.portAdapter.rabbitMQ.adapter.subscriber'),
+            $serviceLocator->get('eventBus.portAdapter.rabbitMQ.adapter.publisher'),
             new EventFactory()
         );
     }

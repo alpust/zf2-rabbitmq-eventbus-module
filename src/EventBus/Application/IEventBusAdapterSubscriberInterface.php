@@ -2,10 +2,10 @@
 namespace EventBus\Application;
 
 /**
- * Interface IEventBusSubscriberInterface
+ * Interface IEventBusAdapterSubscriberInterface
  * @package EventBus\Application
  */
-interface IEventBusSubscriberInterface
+interface IEventBusAdapterSubscriberInterface
 {
 
     /**

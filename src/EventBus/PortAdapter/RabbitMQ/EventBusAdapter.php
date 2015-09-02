@@ -50,9 +50,14 @@ class EventBusAdapter implements IEventBusAdapterInterface
     public function publish($event = [])
     {
         try {
+
+            if(!$this->connection->isConnected()) {
+                $this->connection->connect();
+            }
+
             list($message, $attributes) = $this->prepareMessage($event);
             $result = $this->getExchange()->publish($message, null, AMQP_NOPARAM, $attributes);
-            $this->getChannel()->getConnection()->disconnect();
+            $this->connection->disconnect();
             return $result;
         } catch(\Exception $e) {
             return false;
@@ -62,6 +67,10 @@ class EventBusAdapter implements IEventBusAdapterInterface
     public function subscribe(callable $callback)
     {
         $this->callback = $callback;
+
+        if(!$this->connection->isConnected()) {
+            $this->connection->connect();
+        }
 
         if(!$this->getQueue()->bind($this->getExchange()->getName())) {
             throw new \Exception('Can not bind ' . $this->getQueue()->getName() . ' to an exchange ' . $this->getExchange()->getName());
@@ -80,6 +89,11 @@ class EventBusAdapter implements IEventBusAdapterInterface
                             call_user_func($this->callback, $this->unpackMessage($message));
                         }
                 }
+
+                if(!$this->connection->isConnected()) {
+                    $this->connection->connect();
+                }
+
                 $this->getQueue()->ack($message->getDeliveryTag());
             } catch (\Exception $e) {
                 $this->processFailedSubscription($message);
@@ -109,6 +123,10 @@ class EventBusAdapter implements IEventBusAdapterInterface
 
     protected function processFailedSubscription(\AMQPEnvelope $message)
     {
+
+        if(!$this->connection->isConnected()) {
+            $this->connection->connect();
+        }
 
         $attempt = $message->getHeader('redelivery_counter') ? $message->getHeader('redelivery_counter') : 1;
         if($attempt < 3) {
@@ -168,6 +186,10 @@ class EventBusAdapter implements IEventBusAdapterInterface
             $this->exchange->setType($this->exchangeConfig['type']);
             $this->exchange->setArguments($this->exchangeConfig['arguments']);
             $this->exchange->setFlags($this->exchangeConfig['flags']);
+
+            if(!$this->connection->isConnected()) {
+                $this->connection->connect();
+            }
 
             if(!$this->exchange->declareExchange()) {
                 throw new \Exception('Can not declare exchange ' . $this->exchange->getName());

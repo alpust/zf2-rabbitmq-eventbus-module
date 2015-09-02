@@ -54,7 +54,7 @@ class EventBusAdapterPublisher implements IEventBusAdapterPublisherInterface
 
     public function __destruct()
     {
-        //$this->connection->disconnect();
+        $this->exchange = null;
     }
 
     /**
@@ -75,6 +75,9 @@ class EventBusAdapterPublisher implements IEventBusAdapterPublisherInterface
             }
 
             $result = $this->getExchange()->publish($message, null, AMQP_NOPARAM, $attributes);
+
+            $this->exchange = null;
+            $this->channel = null;
 
             return $result;
 

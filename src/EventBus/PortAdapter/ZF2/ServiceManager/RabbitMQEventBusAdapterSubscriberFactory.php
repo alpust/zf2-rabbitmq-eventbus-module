@@ -36,7 +36,7 @@ class RabbitMQEventBusAdapterSubscriberFactory implements FactoryInterface
         $exchangeConfig = $serviceLocator->get('amqp.exchanges.messageBus');
 
         /** @var \AMQPConnection $connection */
-        $connection = $serviceLocator->get($exchangeConfig['connectionSubscriber']);
+        $connection = $serviceLocator->get($exchangeConfig['connection']);
 
         return new EventBusAdapterSubscriber($queueConfig, $exchangeConfig['name'], $connection);
     }

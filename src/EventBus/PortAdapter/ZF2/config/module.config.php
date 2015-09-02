@@ -24,25 +24,17 @@ return [
     'amqp' => [
         'boundedContext' => '',
         'connections' => [
-            'defaultPublisher' => [
+            'default' => [
                 'host' => 'localhost',
                 'port' => 5672,
                 'login' => 'guest',
                 'password' => 'guest',
                 'vhost' => '/'
             ],
-            'defaultSubscriber' => [
-                'host' => 'localhost',
-                'port' => 5672,
-                'login' => 'guest',
-                'password' => 'guest',
-                'vhost' => '/'
-            ]
         ],
         'exchanges' => [
             'messageBus' => [
-                'connectionPublisher' => 'defaultPublisher',
-                'connectionSubscriber' => 'defaultSubscriber',
+                'connection' => 'default',
                 'type' => AMQP_EX_TYPE_FANOUT,
                 'flags' => AMQP_DURABLE
             ]

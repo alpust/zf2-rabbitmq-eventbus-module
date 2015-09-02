@@ -54,7 +54,7 @@ class EventBusAdapterPublisher implements IEventBusAdapterPublisherInterface
 
     public function __destruct()
     {
-        $this->connection->disconnect();
+        //$this->connection->disconnect();
     }
 
     /**
@@ -76,16 +76,9 @@ class EventBusAdapterPublisher implements IEventBusAdapterPublisherInterface
 
             $result = $this->getExchange()->publish($message, null, AMQP_NOPARAM, $attributes);
 
-
-            //Close connection, after message sent
-            $this->connection->disconnect();
-
             return $result;
 
         } catch(\Exception $e) {
-
-            //We still need close connection in Exception case too
-            $this->connection->disconnect();
 
             throw new NotDeliveredEventException("Event not delivered to queue", 0, $e);
         }

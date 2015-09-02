@@ -5,7 +5,7 @@ namespace EventBus\Application;
  * Class NotSubscribedListenerException
  * @package EventBus\Application
  */
-class NotSubscribedListenerException extends \Exception
+class NotSubscribedListenerException extends Exception
 {
 
 }

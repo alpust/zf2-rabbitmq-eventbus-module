@@ -31,13 +31,13 @@ class ExchangeAbstractFactory extends  RabbitMQAbstractFactory
         $exchangeConfig['name'] = $requested;
 
         $connectionPublisherName = $this->configKey . '.connections.default';
-        if(isset($exchangeConfig['connectionPublisher']) && is_string($exchangeConfig['connection'])) {
+        if(isset($exchangeConfig['connectionPublisher']) && is_string($exchangeConfig['connectionPublisher'])) {
             $connectionPublisherName = $this->configKey . '.connections.' . $exchangeConfig['connectionPublisher'];
         }
         $exchangeConfig['connectionPublisher'] = $connectionPublisherName;
 
         $connectionSubscriberName = $this->configKey . '.connections.default';
-        if(isset($exchangeConfig['connectionSubscriber']) && is_string($exchangeConfig['connection'])) {
+        if(isset($exchangeConfig['connectionSubscriber']) && is_string($exchangeConfig['connectionSubscriber'])) {
             $connectionSubscriberName = $this->configKey . '.connections.' . $exchangeConfig['connectionSubscriber'];
         }
         $exchangeConfig['connectionSubscriber'] = $connectionSubscriberName;

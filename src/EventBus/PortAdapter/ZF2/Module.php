@@ -32,6 +32,7 @@ class Module implements
             if(!empty($config['amqp']['boundedContext'])) {
                 $boundedContext = $config['amqp']['boundedContext'];
                 $localEventManager = $e->getApplication()->getEventManager();
+
                 /** @var \EventBus\Application\IEventBusInterface $eventBus */
                 $eventBus = $serviceManager->get('EventBus');
                 $localEventManager->getSharedManager()->attach('*', '*', function(Event $event) use ($eventBus, $boundedContext){

@@ -7,10 +7,19 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 abstract class RabbitMQAbstractFactory implements AbstractFactoryInterface
 {
 
+    /**
+     * @var string
+     */
     protected $configKey = 'amqp';
 
+    /**
+     * @var string
+     */
     protected $configSubKey;
 
+    /**
+     * @var array
+     */
     protected $config;
 
     /**
@@ -66,6 +75,11 @@ abstract class RabbitMQAbstractFactory implements AbstractFactoryInterface
     }
 
 
+    /**
+     * @param ServiceLocatorInterface $services
+     * @param $name
+     * @return mixed
+     */
     protected function getServiceConfig(ServiceLocatorInterface $services, $name)
     {
         $amqpConfig = $this->getConfig($services);

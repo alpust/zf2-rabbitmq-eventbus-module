@@ -1,40 +1,72 @@
 <?php
 namespace EventBus\PortAdapter\ZF2\EventManager;
 
-use EventBus\Application\IEventBusAdapterInterface;
+use EventBus\Application\IEventBusAdapterSubscriberInterface;
+use EventBus\Application\IEventBusAdapterPublisherInterface;
+
 use EventBus\Application\IEventBusInterface;
 use Zend\EventManager\EventInterface;
 use Zend\EventManager\EventManagerAwareInterface;
 use Zend\EventManager\EventManagerAwareTrait;
 
+/**
+ * Class EventBus
+ * @package EventBus\PortAdapter\ZF2\EventManager
+ */
 class EventBus implements EventManagerAwareInterface, IEventBusInterface
 {
 
     use EventManagerAwareTrait;
 
-    /** @var IEventBusAdapterInterface  */
-    protected $eventBusAdapter;
+    /**
+     * @var IEventBusAdapterSubscriberInterface
+     */
+    protected $eventBusAdapterSubscriber;
 
-    /** @var EventFactory  */
+    /**
+     * @var IEventBusAdapterPublisherInterface
+     */
+    protected $eventBusAdapterPublisher;
+
+    /**
+     * @var EventFactory
+     */
     protected $eventFactory;
 
+    /**
+     * @param IEventBusAdapterSubscriberInterface $eventBusAdapterSubscriber
+     * @param IEventBusAdapterPublisherInterface $eventBusAdapterPublisher
+     * @param EventFactory $eventFactory
+     */
     public function __construct(
-        IEventBusAdapterInterface $eventBusAdapter,
+        IEventBusAdapterSubscriberInterface $eventBusAdapterSubscriber,
+        IEventBusAdapterPublisherInterface $eventBusAdapterPublisher,
         EventFactory $eventFactory
     ){
-        $this->eventBusAdapter = $eventBusAdapter;
+        $this->eventBusAdapterSubscriber = $eventBusAdapterSubscriber;
+        $this->eventBusAdapterPublisher = $eventBusAdapterPublisher;
         $this->eventFactory = $eventFactory;
     }
 
+    /**
+     * Subscribe all internal listeners to external events
+     */
     public function subscribe()
     {
         $callback = function($event){
             $this->getEventManager()->trigger($this->eventFactory->restore($event));
         };
         $callback->bindTo($this);
-        $this->eventBusAdapter->subscribe($callback);
+
+        $this->eventBusAdapterSubscriber->subscribe($callback);
     }
 
+    /**
+     * Publish internal event to external systems
+     * @param $event
+     * @throws \Exception
+     * @return boolean
+     */
     public function publish($event)
     {
         if(is_string($event)) {
@@ -51,7 +83,7 @@ class EventBus implements EventManagerAwareInterface, IEventBusInterface
             throw new \Exception('Can not publish. Incorrect event format.');
         }
 
-        $this->eventBusAdapter->publish($event);
+        return $this->eventBusAdapterPublisher->publish($event);
     }
 
 

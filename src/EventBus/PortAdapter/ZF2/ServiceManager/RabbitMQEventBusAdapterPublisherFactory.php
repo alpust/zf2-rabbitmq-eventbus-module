@@ -2,30 +2,30 @@
 namespace EventBus\PortAdapter\ZF2\ServiceManager;
 
 
-use EventBus\PortAdapter\RabbitMQ\EventBusAdapter;
+use EventBus\PortAdapter\RabbitMQ\EventBusAdapterPublisher;
 use Zend\ServiceManager\Exception\ServiceNotCreatedException;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
- * Class RabbitMQEventBusAdapterFactory
+ * Class RabbitMQEventBusAdapterPublisherFactory
  * @package EventBus\PortAdapter\ZF2\ServiceManager
- * @deprecated EventBusAdapter will soon deleted
  */
-class RabbitMQEventBusAdapterFactory implements FactoryInterface
+class RabbitMQEventBusAdapterPublisherFactory implements FactoryInterface
 {
     /**
-     * Create service
-     *
      * @param ServiceLocatorInterface $serviceLocator
-     * @return EventBusAdapter
+     * @return EventBusAdapterSubscriber
+     * @throws ServiceNotCreatedException
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         $config = $serviceLocator->get('Config');
 
         if(empty($config['amqp']['boundedContext'])) {
-            throw new ServiceNotCreatedException('Please specify boundedContext in amqp config section. It should be application-dependable.');
+            throw new ServiceNotCreatedException(
+                "Please specify boundedContext in amqp config section. It should be application-dependable."
+            );
         }
 
         $queueConfig = [
@@ -36,9 +36,9 @@ class RabbitMQEventBusAdapterFactory implements FactoryInterface
         $exchangeConfig = $serviceLocator->get('amqp.exchanges.messageBus');
 
         /** @var \AMQPConnection $connection */
-        $connection = $serviceLocator->get($exchangeConfig['connection']);
+        $connection = clone $serviceLocator->get($exchangeConfig['connection']);
 
-        return new EventBusAdapter($queueConfig, $exchangeConfig, $connection);
+        return new EventBusAdapterPublisher($exchangeConfig['name'], $queueConfig['name'], $connection);
     }
 
 

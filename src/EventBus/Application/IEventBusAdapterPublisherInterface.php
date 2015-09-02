@@ -1,18 +1,12 @@
 <?php
 namespace EventBus\Application;
 
-
 /**
- * Interface IEventBusInterface
+ * Interface IEventBusAdapterPublisherInterface
  * @package EventBus\Application
  */
-interface IEventBusInterface
+interface IEventBusAdapterPublisherInterface
 {
-
-    /**
-     * @return mixed
-     */
-    public function subscribe();
 
     /**
      * @param $event

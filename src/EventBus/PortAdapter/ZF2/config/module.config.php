@@ -48,6 +48,8 @@ return [
         ],
         'factories' => [
             'eventBus.portAdapter.rabbitMQ.adapter' => 'EventBus\PortAdapter\ZF2\ServiceManager\RabbitMQEventBusAdapterFactory',
+            'eventBus.portAdapter.rabbitMQ.adapter.subscriber' => 'EventBus\PortAdapter\ZF2\ServiceManager\RabbitMQEventBusAdapterSubscriberFactory',
+            'eventBus.portAdapter.rabbitMQ.adapter.publisher' => 'EventBus\PortAdapter\ZF2\ServiceManager\RabbitMQEventBusAdapterPublisherFactory',
             'EventBus' => 'EventBus\PortAdapter\ZF2\EventManager\EventBusFactory'
         ],
     ],

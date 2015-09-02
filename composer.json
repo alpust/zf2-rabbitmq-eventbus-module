@@ -1,5 +1,5 @@
 {
-    "name": "paulchyrilov/zf2-rabbitmq-eventbus-module",
+    "name": "alpust/zf2-rabbitmq-eventbus-module",
     "description": "Zend 2 event bus module using rabbitmq",
     "type": "library",
     "license": "MIT",

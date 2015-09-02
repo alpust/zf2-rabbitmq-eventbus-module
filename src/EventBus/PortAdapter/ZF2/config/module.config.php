@@ -34,7 +34,8 @@ return [
         ],
         'exchanges' => [
             'messageBus' => [
-                'connection' => 'default',
+                'connectionPublisher' => 'default',
+                'connectionSubscriber' => 'default',
                 'type' => AMQP_EX_TYPE_FANOUT,
                 'flags' => AMQP_DURABLE
             ]

@@ -35,12 +35,15 @@ class Module implements
 
                 /** @var \EventBus\Application\IEventBusInterface $eventBus */
                 $eventBus = $serviceManager->get('EventBus');
+
+                //We attaching handler with high priority, because we shouldn't be last subscriber or we return
+                //bad result to some zend MVC processes
                 $localEventManager->getSharedManager()->attach('*', '*', function(Event $event) use ($eventBus, $boundedContext){
                     if($event instanceof EventBusEvent || strpos($event->getName(), $boundedContext . '.') !== 0) {
                         return;
                     }
                     $eventBus->publish($event);
-                });
+                }, 1000000);
             }
         }
     }

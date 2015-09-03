@@ -3,6 +3,7 @@ namespace EventBus\PortAdapter\ZF2\EventManager;
 
 use EventBus\Application\IEventBusAdapterSubscriberInterface;
 use EventBus\Application\IEventBusAdapterPublisherInterface;
+use EventBus\Application\Exception as EventBusException;
 
 use EventBus\Application\IEventBusInterface;
 use Zend\EventManager\EventInterface;
@@ -57,8 +58,18 @@ class EventBus implements EventManagerAwareInterface, IEventBusInterface
             $this->getEventManager()->trigger($this->eventFactory->restore($event));
         };
         $callback->bindTo($this);
+        try {
+            $this->eventBusAdapterSubscriber->subscribe($callback);
+        } catch(EventBusException $e) {
 
-        $this->eventBusAdapterSubscriber->subscribe($callback);
+            //Trigger event with exception details
+            $this->getEventManager()->trigger(
+                'eventBus.exception', null,
+                ['message' => $e->getMessage(), 'trace' => $e->getTrace()]
+            );
+        }
+
+        return false;
     }
 
     /**
@@ -83,7 +94,18 @@ class EventBus implements EventManagerAwareInterface, IEventBusInterface
             throw new \Exception('Can not publish. Incorrect event format.');
         }
 
-        return $this->eventBusAdapterPublisher->publish($event);
+        try {
+            return $this->eventBusAdapterPublisher->publish($event);
+        } catch(EventBusException $e) {
+
+            //Trigger event with exception details
+            $this->getEventManager()->trigger(
+                'eventBus.exception', null,
+                ['message' => $e->getMessage(), 'trace' => $e->getTrace()]
+            );
+        }
+
+        return false;
     }
 
 

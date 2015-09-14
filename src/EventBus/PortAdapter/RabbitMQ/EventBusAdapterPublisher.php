@@ -102,7 +102,7 @@ class EventBusAdapterPublisher implements IEventBusAdapterPublisherInterface
             $attributes['content_type'] = 'text/plain';
             return [$message, $attributes];
         } elseif(is_array($message)) {
-            $message['publishedAt'] = date(\DateTime::ATOM);
+            $message['publishedAt'] = date(DATE_ATOM);
             $attributes['content_type'] = 'serialized/array';
             return [serialize($message), $attributes];
         }

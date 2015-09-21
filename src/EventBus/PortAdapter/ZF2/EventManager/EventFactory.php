@@ -13,6 +13,11 @@ class EventFactory
             if(!array_key_exists('name', $event) || !array_key_exists('params', $event)) {
                 throw new \Exception('Can\'t restore event from ' . implode(':', $event));
             }
+
+            if(isset($event['publishedAt'])) {
+                $event['params']['publishedAt'] = $event['publishedAt'];
+            }
+
             return new Event($event['name'], null, $event['params']);
         }
         throw new \Exception('Unrecognized event structure.');

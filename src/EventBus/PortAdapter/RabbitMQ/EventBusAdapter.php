@@ -3,6 +3,10 @@ namespace EventBus\PortAdapter\RabbitMQ;
 
 use EventBus\Application\IEventBusAdapterInterface;
 
+/**
+ * Class EventBusAdapter
+ * @package EventBus\PortAdapter\RabbitMQ
+ */
 class EventBusAdapter implements IEventBusAdapterInterface
 {
 
@@ -32,6 +36,11 @@ class EventBusAdapter implements IEventBusAdapterInterface
         'content_encoding' => 'UTF8'
     ];
 
+    /**
+     * @param $queueConfig
+     * @param $exchangeConfig
+     * @param \AMQPConnection $connection
+     */
     public function __construct(
         $queueConfig,
         $exchangeConfig,
@@ -47,6 +56,10 @@ class EventBusAdapter implements IEventBusAdapterInterface
         $this->getExchange()->getConnection()->disconnect();
     }
 
+    /**
+     * @param array $event
+     * @return bool
+     */
     public function publish($event = [])
     {
         try {
@@ -64,6 +77,11 @@ class EventBusAdapter implements IEventBusAdapterInterface
         }
     }
 
+    /**
+     * @param callable $callback
+     * @return mixed|void
+     * @throws \Exception
+     */
     public function subscribe(callable $callback)
     {
         $this->callback = $callback;
@@ -104,6 +122,11 @@ class EventBusAdapter implements IEventBusAdapterInterface
         $this->getQueue()->consume($callback);
     }
 
+    /**
+     * @param $message
+     * @return array
+     * @throws \Exception
+     */
     protected function prepareMessage($message)
     {
         $attributes = $this->messageAttributes;
@@ -121,6 +144,10 @@ class EventBusAdapter implements IEventBusAdapterInterface
 
     }
 
+    /**
+     * @param \AMQPEnvelope $message
+     * @throws \Exception
+     */
     protected function processFailedSubscription(\AMQPEnvelope $message)
     {
 
@@ -145,6 +172,11 @@ class EventBusAdapter implements IEventBusAdapterInterface
         $this->getQueue()->ack($message->getDeliveryTag());
     }
 
+    /**
+     * @param \AMQPEnvelope $message
+     * @return mixed|string
+     * @throws \Exception
+     */
     protected function unpackMessage(\AMQPEnvelope $message)
     {
         switch ($message->getContentType()) {
@@ -204,6 +236,9 @@ class EventBusAdapter implements IEventBusAdapterInterface
         return $this->exchange;
     }
 
+    /**
+     * @return \AMQPChannel
+     */
     private function getChannel()
     {
         if(!$this->channel) {

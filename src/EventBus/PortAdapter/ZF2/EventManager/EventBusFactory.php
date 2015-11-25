@@ -5,6 +5,10 @@ namespace EventBus\PortAdapter\ZF2\EventManager;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
+/**
+ * Class EventBusFactory
+ * @package EventBus\PortAdapter\ZF2\EventManager
+ */
 class EventBusFactory implements FactoryInterface
 {
     /**

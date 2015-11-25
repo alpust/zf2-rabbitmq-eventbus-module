@@ -3,6 +3,7 @@ namespace EventBus\PortAdapter\ZF2\ServiceManager;
 
 
 use EventBus\PortAdapter\RabbitMQ\EventBusAdapterPublisher;
+use EventBus\PortAdapter\RabbitMQ\EventBusAdapterSubscriber;
 use Zend\ServiceManager\Exception\ServiceNotCreatedException;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;

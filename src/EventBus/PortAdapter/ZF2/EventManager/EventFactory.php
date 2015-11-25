@@ -1,9 +1,17 @@
 <?php
 namespace EventBus\PortAdapter\ZF2\EventManager;
 
+/**
+ * Class EventFactory
+ * @package EventBus\PortAdapter\ZF2\EventManager
+ */
 class EventFactory
 {
-
+    /**
+     * @param $event
+     * @return Event
+     * @throws \Exception
+     */
     public function restore($event)
     {
 

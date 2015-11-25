@@ -4,6 +4,10 @@ namespace EventBus\PortAdapter\ZF2\ServiceManager;
 use Zend\ServiceManager\AbstractFactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
+/**
+ * Class RabbitMQAbstractFactory
+ * @package EventBus\PortAdapter\ZF2\ServiceManager
+ */
 abstract class RabbitMQAbstractFactory implements AbstractFactoryInterface
 {
 

@@ -8,9 +8,16 @@ namespace EventBus\Application;
  */
 interface IEventBusAdapterInterface
 {
-
+    /**
+     * @param array $event
+     * @return mixed
+     */
     public function publish($event = []);
 
+    /**
+     * @param callable $callback
+     * @return mixed
+     */
     public function subscribe(callable $callback);
 
 }

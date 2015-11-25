@@ -1,6 +1,7 @@
 <?php
 namespace EventBus;
 
+use EventBus\PortAdapter\ZF2\EventManager\Event as EventBusEvent;
 use Zend\EventManager\Event;
 use Zend\EventManager\EventInterface;
 use Zend\ModuleManager\Feature\AutoloaderProviderInterface;
@@ -9,8 +10,10 @@ use Zend\ModuleManager\Feature\ConfigProviderInterface;
 use Zend\ModuleManager\Feature\ServiceProviderInterface;
 use Zend\Mvc\MvcEvent;
 
-use EventBus\PortAdapter\ZF2\EventManager\Event as EventBusEvent;
-
+/**
+ * Class Module
+ * @package EventBus
+ */
 class Module implements
     ConfigProviderInterface,
     AutoloaderProviderInterface,
@@ -26,11 +29,11 @@ class Module implements
      */
     public function onBootstrap(EventInterface $e)
     {
-        if($e instanceof MvcEvent) {
+        if ($e instanceof MvcEvent) {
             $serviceManager = $e->getApplication()->getServiceManager();
-            $config = $serviceManager->get('Config');
-            if(!empty($config['amqp']['boundedContext'])) {
-                $boundedContext = $config['amqp']['boundedContext'];
+            $config         = $serviceManager->get('Config');
+            if (!empty($config['amqp']['boundedContext'])) {
+                $boundedContext    = $config['amqp']['boundedContext'];
                 $localEventManager = $e->getApplication()->getEventManager();
 
                 /** @var \EventBus\Application\IEventBusInterface $eventBus */
@@ -38,8 +41,8 @@ class Module implements
 
                 //We attaching handler with high priority, because we shouldn't be last subscriber or we return
                 //bad result to some zend MVC processes
-                $localEventManager->getSharedManager()->attach('*', '*', function(Event $event) use ($eventBus, $boundedContext){
-                    if($event instanceof EventBusEvent || strpos($event->getName(), $boundedContext . '.') !== 0) {
+                $localEventManager->getSharedManager()->attach('*', '*', function (Event $event) use ($eventBus, $boundedContext) {
+                    if ($event instanceof EventBusEvent || strpos($event->getName(), $boundedContext . '.') !== 0) {
                         return;
                     }
                     $eventBus->publish($event);
@@ -64,6 +67,7 @@ class Module implements
     public function getConfig()
     {
         $config = include $this->getModuleDir() . '/config/' . $this->configFile;
+
         return $config;
     }
 

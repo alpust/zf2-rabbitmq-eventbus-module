@@ -27,6 +27,12 @@ or
 4. Require this vendor in your `composer.json`, make `composer update`
 and add `EventBus` in `application.config.php` in modules.
 
+Configuration
+-----
+
+Copy `src/EventBus/PortAdapter/ZF2/config/amqp.local.php.dist` from vendor to your 
+`config/autoload` and rename it to `amqp.local.php`. Then change settings if necessary.
+
 Usage
 ======
 

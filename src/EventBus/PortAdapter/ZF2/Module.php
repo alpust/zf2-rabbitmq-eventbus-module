@@ -2,11 +2,13 @@
 namespace EventBus;
 
 use EventBus\PortAdapter\ZF2\EventManager\Event as EventBusEvent;
+use Zend\Console\Adapter\AdapterInterface;
 use Zend\EventManager\Event;
 use Zend\EventManager\EventInterface;
 use Zend\ModuleManager\Feature\AutoloaderProviderInterface;
 use Zend\ModuleManager\Feature\BootstrapListenerInterface;
 use Zend\ModuleManager\Feature\ConfigProviderInterface;
+use Zend\ModuleManager\Feature\ConsoleUsageProviderInterface;
 use Zend\ModuleManager\Feature\ServiceProviderInterface;
 use Zend\Mvc\MvcEvent;
 
@@ -18,7 +20,8 @@ class Module implements
     ConfigProviderInterface,
     AutoloaderProviderInterface,
     ServiceProviderInterface,
-    BootstrapListenerInterface
+    BootstrapListenerInterface,
+    ConsoleUsageProviderInterface
 {
 
     /**
@@ -85,5 +88,20 @@ class Module implements
     public function getServiceConfig()
     {
         return [];
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getConsoleUsage(AdapterInterface $console)
+    {
+        return [
+            'eventBus console [consume|testConsume|testPublish]:action [<message>]'
+            => 'execute one of the commands',
+            ['testConsume', 'Test connection and initialisation for consume'],
+            ['testPublish', 'Test connection and initialisation for publishing'],
+            ['message', 'message for publish test'],
+            ['consume', 'Start consume messages with given configuration'],
+        ];
     }
 }

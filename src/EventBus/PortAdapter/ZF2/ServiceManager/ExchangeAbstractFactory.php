@@ -4,6 +4,10 @@ namespace EventBus\PortAdapter\ZF2\ServiceManager;
 use Zend\ServiceManager\Exception\ServiceNotCreatedException;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
+/**
+ * Class ExchangeAbstractFactory
+ * @package EventBus\PortAdapter\ZF2\ServiceManager
+ */
 class ExchangeAbstractFactory extends  RabbitMQAbstractFactory
 {
 

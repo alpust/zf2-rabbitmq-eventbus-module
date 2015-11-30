@@ -108,7 +108,4 @@ class EventBus implements EventManagerAwareInterface, IEventBusInterface
         return false;
     }
 
-
-
-
 }

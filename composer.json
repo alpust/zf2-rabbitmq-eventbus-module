@@ -1,35 +1,36 @@
 {
-    "name": "alpust/zf2-rabbitmq-eventbus-module",
-    "description": "Zend 2 event bus module using rabbitmq",
-    "type": "library",
-    "license": "MIT",
-    "keywords": [
-        "module",
-        "zf2",
-        "event-bus",
-        "rabbitmq",
-        "amqp"
-    ],
-    "authors":     [
-      {
-        "name": "Paul Churilov",
-        "email": "paulchurilov@gmail.com"
-      }
-    ],
-    "require": {
-        "php":                               ">=5.3.3",
-        "ext-amqp"  :                        ">=1.4.0",
-        "zendframework/zend-stdlib":         ">=2.2",
-        "zendframework/zend-mvc":            ">=2.2",
-        "zendframework/zend-servicemanager": ">=2.2",
-        "zendframework/zend-modulemanager":  ">=2.2"
-    },
-    "require-dev": {
-        "pdezwart/php-amqp" : "dev-master"
-    },
-    "autoload": {
-        "psr-0": {
-            "EventBus\\": "src/"
-        }
+  "name": "alpust/zf2-rabbitmq-eventbus-module",
+  "description": "Zend 2 event bus module using rabbitmq",
+  "type": "library",
+  "license": "MIT",
+  "keywords": [
+    "module",
+    "zf2",
+    "event-bus",
+    "rabbitmq",
+    "amqp"
+  ],
+  "authors": [
+    {
+      "name": "Paul Churilov",
+      "email": "paulchurilov@gmail.com"
     }
+  ],
+  "require": {
+    "php": ">=5.3.3",
+    "ext-amqp": ">=1.4.0",
+    "zendframework/zend-stdlib": ">=2.2",
+    "zendframework/zend-mvc": ">=2.2",
+    "zendframework/zend-servicemanager": ">=2.2",
+    "zendframework/zend-modulemanager": ">=2.2",
+    "zendframework/zend-console": ">=2.2"
+  },
+  "require-dev": {
+    "pdezwart/php-amqp": "dev-master"
+  },
+  "autoload": {
+    "psr-0": {
+      "EventBus\\": "src/"
+    }
+  }
 }

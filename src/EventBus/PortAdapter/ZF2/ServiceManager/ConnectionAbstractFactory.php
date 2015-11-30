@@ -4,6 +4,10 @@ namespace EventBus\PortAdapter\ZF2\ServiceManager;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use AMQPConnection;
 
+/**
+ * Class ConnectionAbstractFactory
+ * @package EventBus\PortAdapter\ZF2\ServiceManager
+ */
 class ConnectionAbstractFactory extends RabbitMQAbstractFactory
 {
 
@@ -34,6 +38,5 @@ class ConnectionAbstractFactory extends RabbitMQAbstractFactory
 
         return new AMQPConnection($connectionConfig);
     }
-
 
 }

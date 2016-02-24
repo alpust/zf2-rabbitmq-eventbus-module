@@ -24,7 +24,7 @@ class EventBusAdapterSubscriber implements IEventBusAdapterSubscriberInterface
     /**
      * @var string
      */
-    protected $exchangeName;
+    protected $exchangeConfig;
 
     /** @var \AMQPQueue  */
     private $queue;
@@ -45,16 +45,16 @@ class EventBusAdapterSubscriber implements IEventBusAdapterSubscriberInterface
 
     /**
      * @param $queueConfig
-     * @param $exchangeName
+     * @param $exchangeConfig
      * @param \AMQPConnection $connection
      */
     public function __construct(
         $queueConfig,
-        $exchangeName,
+        $exchangeConfig,
         \AMQPConnection $connection
     ){
         $this->queueConfig = $queueConfig;
-        $this->exchangeName = $exchangeName;
+        $this->exchangeConfig = $exchangeConfig;
         $this->connection = $connection;
     }
 
@@ -78,9 +78,13 @@ class EventBusAdapterSubscriber implements IEventBusAdapterSubscriberInterface
             $this->connection->connect();
         }
 
+
+        /** Declare exchange. In case it is already exists it could change it's options */
+        $this->declareExchange();
+
         //Binding queue to correct exchange
-        if(!$this->getQueue()->bind($this->exchangeName)) {
-            throw new NotSubscribedListenerException("Can not bind " . $this->getQueue()->getName() . " to an exchange " . $this->exchangeName);
+        if(!$this->getQueue()->bind($this->exchangeConfig['name'])) {
+            throw new NotSubscribedListenerException("Can not bind " . $this->getQueue()->getName() . " to an exchange " . $this->exchangeConfig);
         }
 
         $callback = function(\AMQPEnvelope $message){
@@ -108,6 +112,19 @@ class EventBusAdapterSubscriber implements IEventBusAdapterSubscriberInterface
 
         //Listen events
         $this->getQueue()->consume($callback);
+    }
+
+    protected function declareExchange()
+    {
+        $exchange = new \AMQPExchange($this->getChannel());
+        $exchange->setName($this->exchangeConfig['name']);
+        $exchange->setType($this->exchangeConfig['type']);
+        $exchange->setArguments($this->exchangeConfig['arguments']);
+        $exchange->setFlags($this->exchangeConfig['flags']);
+
+        if(!$exchange->declareExchange()) {
+            throw new \Exception('Can not declare exchange ' . $exchange->getName());
+        }
     }
 
     /**

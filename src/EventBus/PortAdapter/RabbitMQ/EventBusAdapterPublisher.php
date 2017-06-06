@@ -120,7 +120,13 @@ class EventBusAdapterPublisher implements IEventBusAdapterPublisherInterface
 
         if(!$this->exchange) {
 
-            $this->exchange = new \AMQPExchange($this->getChannel());
+            try {
+                $this->exchange = new \AMQPExchange($this->getChannel());
+            } catch(\Exception $e) {
+                $this->channel = null;
+                $this->exchange = new \AMQPExchange($this->getChannel());
+            }
+
             $this->exchange->setName($this->exchangeConfig['name']);
             $this->exchange->setType($this->exchangeConfig['type']);
             $this->exchange->setArguments($this->exchangeConfig['arguments']);

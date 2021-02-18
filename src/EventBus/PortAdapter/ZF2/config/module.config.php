@@ -39,6 +39,7 @@ return [
                 'flags' => AMQP_DURABLE
             ]
         ],
+        'queue' => [],
     ],
     'service_manager' => [
         'abstract_factories' => [

@@ -30,8 +30,13 @@ class RabbitMQEventBusAdapterSubscriberFactory implements FactoryInterface
 
         $queueConfig = [
             'name' => $config['amqp']['boundedContext'],
-            'flags' => AMQP_DURABLE
+            'flags' => AMQP_DURABLE,
+            'arguments' => [],
         ];
+
+        if (isset($config['amqp']['queue']) && is_array($config['amqp']['queue'])) {
+            $queueConfig = array_merge_recursive($queueConfig, $config['amqp']['queue']);
+        }
 
         $exchangeConfig = $serviceLocator->get('amqp.exchanges.messageBus');
 

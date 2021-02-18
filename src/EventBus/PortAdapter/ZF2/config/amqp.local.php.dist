@@ -14,7 +14,7 @@ return [
         'queue' => [
             'arguments' => [
                 'x-queue-type' => 'classic',
-                'x-single-active-customer' => false,
+                'x-single-active-consumer' => false,
             ],
         ],
     ],

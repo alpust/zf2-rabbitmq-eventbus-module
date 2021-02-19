@@ -154,6 +154,7 @@ class EventBusAdapterSubscriber implements IEventBusAdapterSubscriberInterface
             $this->queue = new \AMQPQueue($this->getChannel());
             $this->queue->setName($this->queueConfig['name']);
             $this->queue->setFlags($this->queueConfig['flags']);
+            $this->queue->setArguments($this->queueConfig['arguments']);
             $this->queue->declareQueue();
         }
 
